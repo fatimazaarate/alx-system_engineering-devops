@@ -1,2 +1,3 @@
-#   PasswordAuthentication no
-#   IdentityFile ~/.ssh/school
+# ~/.ssh/school
+# PasswordAuthentication no
+# IdentityFile ~/.ssh/school
