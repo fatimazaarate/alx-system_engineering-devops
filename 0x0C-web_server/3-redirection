@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Redirection
+
+sudo apt-get update
+sudo apt-get -y install nginx
+echo "Hello World!" > /var/www/html/index.nginx-debian.html
+
+# Set up the Nginx configuration for the redirection
+new_line="location /redirect_me {\n\treturn 301 https:\/\/github.com\/hajarzaitouni;\n}"
+sed -i "/server_name _;/a $new_line" /etc/nginx/sites-available/default
+
+service nginx restart
