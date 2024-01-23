@@ -6,7 +6,14 @@ sudo apt-get -y install nginx
 echo "Hello World!" > /var/www/html/index.nginx-debian.html
 
 # Set up the Nginx configuration for the redirection
-new_line="server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/fatimazaarate permanent;"
-sed -i "/server_name _;/a $new_line" /etc/nginx/sites-available/default
+echo "server {
+    listen 80;
+    listen [::]:80 default_server;
+    root    /var/www/html;
+    index   index.nginx-debian.html;
+    location /redirect_me {
+	return 301 https://github.com/fatimazaarate;
+}
+}" > /etc/nginx/sites-available/default
 
 service nginx restart
