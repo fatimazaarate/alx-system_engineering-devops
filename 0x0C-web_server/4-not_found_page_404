@@ -1,16 +1,50 @@
 #!/usr/bin/env bash
 # Redirection
 
-sudo apt-get update
-sudo apt-get -y install nginx
-echo "Hello World!" > /var/www/html/index.nginx-debian.html
+# Define the path to your Nginx configuration file
+nginx_config="/etc/nginx/sites-available/default"
 
-# Set up the Nginx configuration for the redirection
-new_line="server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/fatimazaarate permanent;"
-sed -i "/server_name _;/a $new_line" /etc/nginx/sites-available/default
+# Define the path to your custom pages directory
+custom_pages_dir="/path/to/your/custom/pages"
 
-# Set up the Nginx configuration for the Not found page 404
-echo "Ceci n'est pas une page" > /var/www/html/custom_404.html
-new_string="server_name _;\n\terror_page 404 \/custom_404.html;\n\tlocation = \/custom_404.html {\n\t\troot \/var\/www\/html;\n\t\tinternal;\n\t}"
-sed -i "s/server_name _;/$new_string/" /etc/nginx/sites-available/default
-service nginx restart
+# Define the custom 404 HTML content
+custom_404_content=$(cat <<EOL
+<!DOCTYPE html>
+<html>
+<head>
+    <title>404 Not Found</title>
+</head>
+<body>
+    <h1>Ceci n'est pas une page</h1>
+</body>
+</html>
+EOL
+)
+
+# Update Nginx configuration
+cat <<EOL > "$nginx_config"
+server {
+    server_name _;
+
+    location / {
+        try_files \$uri \$uri/ @custom_404;
+    }
+
+    location @custom_404 {
+        internal;
+        root $custom_pages_dir;
+        rewrite ^ /custom_404.html break;
+    }
+
+    location = /custom_404.html {
+        internal;
+        root $custom_pages_dir;
+    }
+}
+EOL
+
+# Update custom 404 HTML content
+echo "$custom_404_content" > "$custom_pages_dir/custom_404.html"
+
+# Test Nginx configuration and reload
+sudo nginx -t && sudo service nginx reload
