@@ -2,15 +2,23 @@
 # Redirection
 
 sudo apt-get update
-sudo apt-get -y install nginx
-echo "Hello World!" > /var/www/html/index.nginx-debian.html
+sudo apt-get install -y nginx
 
-# Set up the Nginx configuration for the redirection
-new_line="server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/fatimazaarate permanent;"
-sed -i "/server_name _;/a $new_line" /etc/nginx/sites-available/default
+# Create default page
+echo "Hello World!" > /var/www/html/index.html
 
-# Set up the Nginx configuration for the Not found page 404
-echo "Ceci n'est pas une page" > /var/www/html/custom_404.html
-new_string="server_name _;\n\terror_page 404 \/custom_404.html;\n\tlocation = \/custom_404.html {\n\t\troot \/var\/www\/html;\n\t\tinternal;\n\t}"
-sed -i "s/server_name _;/$new_string/" /etc/nginx/sites-available/default
+# Firewall Configurate server
+ufw allow 'Nginx HTTP'
+
+f_config="/etc/nginx/sites-available/default"
+# Add redirection
+new_site="https://github.com/SosMrRaziel"
+sed -i "/listen 80 default_server/a rewrite ^/redirect_me $new_site permanent;" $f_config
+
+# Add 404 redirection
+echo "Ceci n'est pas une page" > /usr/share/nginx/html/my_404.html
+new_404="my_404.html"
+l_new_404="/my_404.html {root /usr/share/nginx/html;\n internal;}"
+sed -i "/listen 80 default_server/a error_page 404 /$new_404; location = $l_new_404" $f_config
+
 service nginx restart
