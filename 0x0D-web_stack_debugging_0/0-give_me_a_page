@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
 # get Apache to run on the container 
 
-sudo apt-get update
-sudo apt-get install –y apache2
-echo "Hello Holberton" > /var/www/html/index.html
-echo "ServerName localhost" >> /etc/apache2/apache2.conf
-sudo service apache2 start
+service apache2 restart
