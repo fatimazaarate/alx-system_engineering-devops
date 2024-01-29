@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Double the number of webservers
+
+apt-get update
+apt-get install --no-install-recommends software-properties-common
+add-apt-repository ppa:vbernat/haproxy-2.8
+
+apt-get install haproxy=2.8.\*
+
+echo "
+frontend web_frontend
+	bind *:80
+	mode http
+	default_backend web_backend
+backend web_backend
+	balance roundrobin
+	server 408412-web-01 34.229.189.169:80 check
+	server 408412-web-02 54.160.125.224:80 check
+" >> /etc/haproxy/haproxy.cfg
+
+echo "ENABLED=1" >> /etc/default/haproxy
+
+service haproxy restart
