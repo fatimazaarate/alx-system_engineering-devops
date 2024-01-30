@@ -5,13 +5,13 @@ sudo apt-get update
 sudo apt-get install -y haproxy
 
 echo "
-frontend myfront-end
+frontend web-frontend
 	bind *:80
 	mode http
-	default_backend myback-end
-backend myback-end
-	server firstHost 54.209.138.167:80 check
-	server secondHost 100.26.226.218:80 check
+	default_backend web-backend
+backend web-backend
+	server firstHost 34.224.3.13:80 check
+	server secondHost 3.83.18.210:80 check
 	balance roundrobin
 	mode http
 " > /etc/haproxy/haproxy.cfg
