@@ -38,7 +38,7 @@ frontend web-http
         redirect scheme https code 301 if !{ ssl_fc }
 
 frontend web_https
-        bind *:443 ssl crt /etc/letsencrypt/live/www.za-rate-it.tech/fullchain.pem
+        bind *:443 ssl crt /etc/letsencrypt/live/www.za-rate-it.tech/www.za-rate-it.tech.pem
         mode http
         http-request add-header X-Forwarded-Proto https
         default_backend web_backend
