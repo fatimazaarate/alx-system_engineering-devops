@@ -20,3 +20,7 @@ def employee_todo(employee_id):
 
     for task in completed_tasks:
         print(f"\t{task['title']}")
+
+    if __name__ == "__main__":
+        employee_id = int(sys.argv[1])
+        employee_todo(employee_id)
