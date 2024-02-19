@@ -11,7 +11,8 @@ if __name__ == "__main__":
     user_url = "https://jsonplaceholder.typicode.com/users/"
     todos_url = "https://jsonplaceholder.typicode.com/todos"
     response_user = requests.get(user_url + "{}".format(sys.argv[1])).json()
-    response_todo = requests.get(todos_url, params={"userId": sys.argv[1]}).json()
+    response_todo = requests.get(
+        todos_url, params={"userId": sys.argv[1]}).json()
 
     # Fetch user data
     response_user = requests.get(user_url + sys.argv[1]).json()
@@ -27,10 +28,11 @@ if __name__ == "__main__":
             "username": response_user.get("username")
         }
 
-     # Append the task dictionary to the list
-        all_tasks.append(task_info)
+    # Append the task dictionary to the list
+    all_tasks.append(task_info)
 
-    # Create a dictionary with the user ID as key and the list of tasks as value
+    # Create a dictionary with the user ID as key and the
+    # list of tasks as value
     user_tasks = {sys.argv[1]: all_tasks}
 
     with open("{}.json".format(sys.argv[1]), "w") as f:
