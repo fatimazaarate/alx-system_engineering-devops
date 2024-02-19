@@ -10,7 +10,8 @@ if __name__ == "__main__":
     user_url = "https://jsonplaceholder.typicode.com/users/"
     todos_url = "https://jsonplaceholder.typicode.com/todos"
     response_user = requests.get(user_url + "{}".format(sys.argv[1])).json()
-    response_todo = requests.get(todos_url, params={"userId": sys.argv[1]}).json()
+    response_todo = requests.get(
+        todos_url, params={"userId": sys.argv[1]}).json()
 
     task_status = []
     task_title = []
