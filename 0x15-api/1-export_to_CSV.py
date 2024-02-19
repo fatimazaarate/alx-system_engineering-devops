@@ -7,22 +7,20 @@ import sys
 
 
 if __name__ == "__main__":
-    user = "https://jsonplaceholder.typicode.com/users/"
-    todos = "https://jsonplaceholder.typicode.com/todos"
-    response_user = requests.get(user + "{}".format(sys.argv[1])).json()
-    response_todo = requests.get(todos, params={"userId": sys.argv[1]}).json()
+    user_url = "https://jsonplaceholder.typicode.com/users/"
+    todos_url = "https://jsonplaceholder.typicode.com/todos"
+    response_user = requests.get(user_url + "{}".format(sys.argv[1])).json()
+    response_todo = requests.get(todos_url, params={"userId": sys.argv[1]}).json()
 
     task_status = []
     task_title = []
 
-    request = requests.get('https://jsonplaceholder.typicode.com//todos')\
-        .json()
+    username = response_user.get('username')
 
-    for test in request:
-        if test.get('userId') == int(sys.argv[1]):
-            task_status.append(test.get('completed'))
-            task_title.append(test.get('title'))
+    for todo in response_todo:
+        task_status.append(todo.get('completed'))
+        task_title.append(todo.get('title'))
     with open("{}.csv".format(sys.argv[1]), "a") as f:
         for status, title in zip(task_status, task_title):
             print('"{}","{}","{}","{}"'
-                  .format(sys.argv[1], response_user, status, title), file=f)
+                  .format(sys.argv[1], username, status, title), file=f)
