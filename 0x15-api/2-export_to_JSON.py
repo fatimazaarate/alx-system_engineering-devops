@@ -8,22 +8,30 @@ import sys
 
 
 if __name__ == "__main__":
-    user = "https://jsonplaceholder.typicode.com/users/"
-    todos = "https://jsonplaceholder.typicode.com/todos"
-    response_user = requests.get(user + "{}".format(sys.argv[1])).json()
-    response_todo = requests.get(todos, params={"userId": sys.argv[1]}).json()
+    user_url = "https://jsonplaceholder.typicode.com/users/"
+    todos_url = "https://jsonplaceholder.typicode.com/todos"
+    response_user = requests.get(user_url + "{}".format(sys.argv[1])).json()
+    response_todo = requests.get(todos_url, params={"userId": sys.argv[1]}).json()
 
-    all_in_all = []
-    request = requests.get('https://jsonplaceholder.typicode.com//todos')\
-        .json()
+    # Fetch user data
+    response_user = requests.get(user_url + sys.argv[1]).json()
 
-    for task in request:
-        if (task.get("userId") == int(sys.argv[1])):
-            temp = {}
-            temp["task"] = task.get("title")
-            temp["completed"] = task.get("completed")
-            temp["username"] = response_user
-            all_in_all.append(temp)
+    # Create a list to hold all tasks for the user
+    all_tasks = []
 
-    with open("{}.json".format(sys.argv[1]), "a") as f:
-        json.dump({sys.argv[1]: all_in_all}, f)
+    for task in response_todo:
+        # Create a dictionary for each task
+        task_info = {
+            "task": task.get("title"),
+            "completed": task.get("completed"),
+            "username": response_user.get("username")
+        }
+
+     # Append the task dictionary to the list
+        all_tasks.append(task_info)
+
+    # Create a dictionary with the user ID as key and the list of tasks as value
+    user_tasks = {sys.argv[1]: all_tasks}
+
+    with open("{}.json".format(sys.argv[1]), "w") as f:
+        json.dump(user_tasks, f)
